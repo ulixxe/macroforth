@@ -1,0 +1,56 @@
+-*- outline -*-
+
+* Introduction
+
+This is not MacroForth documentation!  For documentation see README.txt.
+Here I document various problems and experience with using/implementing a
+cross forth compiler trying to adhere to the draft standard at
+
+  http://www.forth.com/downloads/ANS/XCtext5.pdf
+  http://www.forth.com/downloads/ANS/XCapp5.pdf
+  http://www.forth.com/downloads/ANS/XCpaper.pdf
+
+* Scopes
+
+** problem with target scope :
+
+*** definition in XCapp5.PDF pretty strict
+
+how handle of compilation helper words?  We already pull commenting words into
+compiling wordlist.  Also need to pull them into interpreting wordlist?
+(immediate = executing during interpretation and compilation).
+
+we need at least \ ( [IF], HEX DECIMAL
+
+section names and types also go into interpreting wordlist.
+
+according to XCtext5.PDF :
+
+x.6.1.nnn SECTION
+Skip leading space delimiters. Parse name delimited by a space. Create a
+definition name in the host only [...]
+
+host does not mean host scope?!
+
+SECTION goes into host wordlist.
+
+** the need for zombies in addition to ghosts:
+
+according to XCapp5.PDF :
+
+Standard data objects defined in TARGET scope are also available in
+the *INTERPRETER wordlist.
+
+hmm.
+
+* No wordlists available for cross-compilation
+
+In a naive implementation, wordlists are used for scope implementation are not
+available to the application writer.
+
+When using (3rd party)libraries, it is not possible to use wordlists for
+preventing naming collisions.  Some oo Forth systems cannot be ported for
+cross forth.
+
+Add wordlist support to target scope?  In interpreter scope, we might then
+need search-wordlist?
